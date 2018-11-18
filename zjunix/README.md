@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ZJUNIX
 
 ## 简介
@@ -52,6 +51,3 @@ ZJUNIX 是一个精简的操作系统内核，专门用于运行在自行定制�
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](./LICENSE)
 
 此工程遵循 BSD3 协议
-=======
-# MiniOS
->>>>>>> 05b45f5a8a900f890c99a195c57b345b42dc4d1d
