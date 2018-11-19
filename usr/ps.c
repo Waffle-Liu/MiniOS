@@ -56,10 +56,11 @@ void ps() {
     kernel_getchar();
     char c;
     ps_buffer_index = 0;
-    ps_buffer[0] = 0;
+    for(int i=0;i<64;i++)
+        ps_buffer[i]='\0';
     kernel_clear_screen(31);
     kernel_puts("PowerShell\n", 0xfff, 0);
-    kernel_printf("%s~ ", relative_path);
+    kernel_printf("%s$ ", relative_path);
     while (1) {
         c = kernel_getchar();
         if (c == '\n') {
@@ -71,7 +72,7 @@ void ps() {
             } else
                 parse_cmd();
             ps_buffer_index = 0;
-            kernel_printf("%s~ ", relative_path);
+            kernel_printf("%s$ ", relative_path);
         } else if (c == 0x08) {
             if (ps_buffer_index) {
                 ps_buffer_index--;

@@ -842,42 +842,51 @@ void get_filename(u8 *entry, u8 *buf) {
             buf[i - 1] = 0;
     }
 }
+int fs_dotdot(char *path,int i){
+    while(--i>0&&path[i]!='/')
+        path[i]='\0';
+    path[i]='\0';
+    if(i==0)
+        path[i++]='/';
+    return i;
+}
 int fs_fullpath(char *src,char *dst,int sz){
     int i,j;
-    for(j=0;src[j]=='.';j++);
     for(i=0;i<sz;i++)
         dst[i]='\0';
     if(src[0]=='/'){
         for(i=0;i<sz&&src[i]!='\0';i++)
             dst[i]=src[i];
+        return 0;
     }
-    else if(j>0&&src[j]=='\0'){
+    for(i=0;i<sz&&relative_path[i]!='\0';i++)
+        dst[i]=relative_path[i];
+    char *tmp=src;
+fs_fullpath_again:
+    for(j=0;tmp[j]=='.';j++);
+    if(j>0&&(tmp[j]=='\0'||tmp[j]=='/')){
         switch(j){
             case 1:// .
-                for(i=0;i<sz&&relative_path[i]!='\0';i++)
-                    dst[i]=relative_path[i];
                 break;
             case 2:// ..
-                for(i=0;i<sz&&relative_path[i]!='\0';i++)
-                    dst[i]=relative_path[i];
-                while(--i>0&&dst[i]!='/')
-                    dst[i]='\0';
-                dst[i]='\0';
-                if(i>0)
-                    break;
+                i=fs_dotdot(dst,i);
+                break;
             default: // ...(.)
                 dst[0]='/';
+                i=1;
                 break;
         }
     }
     else{
-        dft:
-        for(i=0;i<sz&&relative_path[i]!='\0';i++)
-            dst[i]=relative_path[i];
         if(i!=1)dst[i++]='/';
-        for(j=0;i<sz&&src[j]!='\0';i++,j++)
-            dst[i]=src[j];
+        for(j=0;i<sz&&tmp[j]!='\0'&&tmp[j]!='/';i++,j++)
+            dst[i]=tmp[j];
         if(j==0)dst[--i]='\0';
     }
+    if(tmp[j]=='/'){
+        tmp=tmp+j+1;
+        goto fs_fullpath_again;
+    }
+fs_fullpath_exit:
     return i==sz;
 }

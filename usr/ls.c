@@ -64,6 +64,7 @@ int ls(char *para) {
 
     if (fs_open_dir(&dir, fullpath)) {
         kernel_printf("open dir(%s) failed : No such directory! \n", pwd);
+        kernel_printf("%s\n", fullpath);
         return 1;
     }
 
