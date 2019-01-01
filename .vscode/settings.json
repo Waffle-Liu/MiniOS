@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "fat32.h": "c",
+        "vfs.h": "c",
+        "vfscache.h": "c",
+        "def.h": "c",
+        "ps2.h": "c",
+        "pc.h": "c",
+        "slab.h": "c",
+        "utils.h": "c",
+        "list.h": "c",
+        "vga.h": "c",
+        "log.h": "c",
+        "buddy.h": "c",
+        "bootmm.h": "c",
+        "fat.h": "c",
+        "vm.h": "c"
+    }
+}
