@@ -41,7 +41,11 @@ struct kmem_cache {
     struct kmem_cache_cpu cpu;      // Current page
 };
 
+<<<<<<< HEAD
 extern void slab_info();
+=======
+
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 extern void init_slab();
 extern void *kmalloc(unsigned int size);
 extern void *phy_kmalloc(unsigned int size);

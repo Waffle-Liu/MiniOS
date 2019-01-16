@@ -9,12 +9,18 @@
 #include "debug.h"
 #endif  // ! FS_DEBUG
 
+<<<<<<< HEAD
 char relative_path[192]="/";
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 /* fat buffer clock head */
 u32 fat_clock_head = 0;
 BUF_512 fat_buf[FAT_BUF_NUM];
 
+<<<<<<< HEAD
 /* filename */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 u8 filename11[13];
 u8 new_alloc_empty[PAGE_SIZE];
 
@@ -95,7 +101,10 @@ init_fat_info_err:
     return 1;
 }
 
+<<<<<<< HEAD
 /* Init fat buffer */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 void init_fat_buf() {
     int i = 0;
     for (i = 0; i < FAT_BUF_NUM; i++) {
@@ -104,7 +113,10 @@ void init_fat_buf() {
     }
 }
 
+<<<<<<< HEAD
 /* Init directory buffer */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 void init_dir_buf() {
     int i = 0;
     for (i = 0; i < DIR_DATA_BUF_NUM; i++) {
@@ -115,7 +127,10 @@ void init_dir_buf() {
 
 /* FAT Initialize */
 u32 init_fs() {
+<<<<<<< HEAD
     /* if success then return 1 or return 0*/
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     u32 succ = init_fat_info();
     if (0 != succ)
         goto fs_init_err;
@@ -220,7 +235,10 @@ u32 fs_cmp_filename(const u8 *f1, const u8 *f2) {
 
 /* Find a file, only absolute path with starting '/' accepted */
 u32 fs_find(FILE *file) {
+<<<<<<< HEAD
     /* get the filepath of file */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     u8 *f = file->path;
     u32 next_slash;
     u32 i, k;
@@ -228,7 +246,10 @@ u32 fs_find(FILE *file) {
     u32 index;
     u32 sec;
 
+<<<<<<< HEAD
     /* filepath does not start with '/' */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     if (*(f++) != '/')
         goto fs_find_err;
 
@@ -409,7 +430,11 @@ u32 fs_read(FILE *file, u8 *buf, u32 count) {
     u32 index;
 
 #ifdef FS_DEBUG
+<<<<<<< HEAD
     kernel_printf("  fs_read: count %d\n", count);
+=======
+    kernel_printf("fs_read: count %d\n", count);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     disable_interrupts();
 #endif  // ! FS_DEBUG
     /* If file is empty */
@@ -430,10 +455,17 @@ u32 fs_read(FILE *file, u8 *buf, u32 count) {
     end_byte = (file->loc + count - 1) & ((fat_info.BPB.attr.sectors_per_cluster << 9) - 1);
 
 #ifdef FS_DEBUG
+<<<<<<< HEAD
     kernel_printf("  start cluster: %d\n", start_clus);
     kernel_printf("  start byte: %d\n", start_byte);
     kernel_printf("  end cluster: %d\n", end_clus);
     kernel_printf("  end byte: %d\n", end_byte);
+=======
+    kernel_printf("start cluster: %d\n", start_clus);
+    kernel_printf("start byte: %d\n", start_byte);
+    kernel_printf("end cluster: %d\n", end_clus);
+    kernel_printf("end byte: %d\n", end_byte);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 #endif  // ! FS_DEBUG
     /* Open first cluster to read */
     for (i = 0; i < start_clus; i++) {
@@ -472,7 +504,11 @@ u32 fs_read(FILE *file, u8 *buf, u32 count) {
 fs_read_end:
 
 #ifdef FS_DEBUG
+<<<<<<< HEAD
     kernel_printf("  fs_read: count %d\n", count);
+=======
+    kernel_printf("fs_read: count %d\n", count);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     enable_interrupts();
 #endif  // ! FS_DEBUG
     /* modify file pointer */
@@ -801,6 +837,7 @@ u32 fs_create(u8 *filename) {
     return fs_create_with_attr(filename, 0x20);
 }
 
+<<<<<<< HEAD
 void get_filetime(u8 *entry, u8 *buf) {
     u32 i;
     for (i = 22; i < 24; i++) {
@@ -825,6 +862,8 @@ void get_filesize(u8 *entry, u8 *buf) {
     buf[i - 28] = 0;
 }
 
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 void get_filename(u8 *entry, u8 *buf) {
     u32 i;
     u32 l1 = 0, l2 = 8;
@@ -867,6 +906,7 @@ void get_filename(u8 *entry, u8 *buf) {
             buf[i - 1] = 0;
     }
 }
+<<<<<<< HEAD
 
 int fs_dotdot(char *path,int i)
 {
@@ -924,3 +964,5 @@ fs_fullpath_again:
 fs_fullpath_exit:
     return i==sz;
 }
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab

@@ -2,6 +2,10 @@
 #include <driver/ps2.h>
 #include <driver/vga.h>
 #include <zjunix/fs/fat.h>
+<<<<<<< HEAD
+=======
+#include <zjunix/vfs/vfs.h>
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
 extern int cursor_freq;
 int pre_cursor_freq;
@@ -53,8 +57,22 @@ char *mystrcpy(char *dest, const char *src) {
 void load_file(char *file_path) {
     int file_size;
     int cnt = 0;
+<<<<<<< HEAD
     unsigned char newch;
     unsigned int ret = fs_open(&file, file_path);
+=======
+    int ret = 1;
+    unsigned char newch;
+    struct file *file = vfs_open(file_path, O_RDONLY, 0);
+    if (IS_ERR_OR_NULL(file)){
+        if ( PTR_ERR(file) == -ENOENT )
+            kernel_printf("File not found!\n");
+        err = PTR_ERR(file);
+    }
+    else{
+        ret = 0;
+    }
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
     if (ret != 0) {
         is_new_file = 1;
@@ -64,6 +82,7 @@ void load_file(char *file_path) {
         is_new_file = 0;
     }
 
+<<<<<<< HEAD
     file_size = get_entry_filesize(file.entry.data);
     int i = 0;
     for (i = 0; i < file_size; i++) {
@@ -71,6 +90,22 @@ void load_file(char *file_path) {
         if (newch != 13) {
             buffer[size++] = (char)newch;
         }
+=======
+    file_size = file->f_dentry->d_inode->i_size;
+    u32 i = 0;
+    u32 base = 0;
+    for (i = 0; i < file_size; i++) {
+        if ( vfs_read(file, &newch, 1, &base) != 1 ){
+            err = 1;
+            return;
+        }
+        
+        // if (newch != 13) {
+        //     buffer[size++] = (char)newch;
+        // }
+        buffer[size++] = (char)newch;
+
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         if (size == BUFFER_SIZE - 1) {
             err = 2;
             return;
@@ -80,6 +115,7 @@ void load_file(char *file_path) {
     if (size == 0 || buffer[size - 1] != '\n') {
         buffer[size++] = '\n';
     }
+<<<<<<< HEAD
     fs_close(&file);
 }
 
@@ -92,6 +128,44 @@ void save_file() {
     fs_lseek(&file, 0);
     fs_write(&file, buffer, size);
     int ret = fs_close(&file);
+=======
+    // u32 j;
+    // for(j = 0; j < size; j++)
+    //     kernel_printf("%c", buffer[j]);
+
+    err = vfs_close(file);
+    return;
+}
+
+void save_file() {
+    u32 base = 0;
+    kernel_clear_screen(31);
+    if (is_new_file) {
+        // fs_create(filename);
+        kernel_printf("Aha!, now cannot create a new file...\n");
+    }
+    // kernel_printf("save_file\n");
+    struct file *file = vfs_open(filename, O_RDWR, 0);
+    if (IS_ERR_OR_NULL(file)){
+        err = PTR_ERR(file);
+        // kernel_getchar();
+        return;
+    }
+    // kernel_printf("vfs_open\n");
+    // kernel_printf("file_name: %s\n", file->f_dentry->d_name.name);	
+    err = vfs_write(file, buffer, size, &base);
+    if(err != size){
+        // kernel_printf("vfs_write_err: %d\n", err);
+        // kernel_printf("size: %d\n", size);
+        // kernel_getchar();
+        return;
+    }
+    
+    // fs_lseek(&file, 0);
+    // fs_write(&file, buffer, size);
+    err = vfs_close(file);
+    // kernel_getchar();
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 }
 
 void insert_key(char key, int site) {
@@ -308,6 +382,10 @@ void do_insert_mode(char key) {
 }
 
 void do_last_line_mode(char key) {
+<<<<<<< HEAD
+=======
+    kernel_printf("last_line_mode\n");
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     switch (key) {
         case 27:  // ESC
             inst_len = 0;
@@ -322,6 +400,10 @@ void do_last_line_mode(char key) {
                 if (inst_len == 3 && instruction[1] == 'q' && instruction[2] == '!') {
                     err = 1;
                 } else if (inst_len == 3 && instruction[1] == 'w' && instruction[2] == 'q') {
+<<<<<<< HEAD
+=======
+                    kernel_printf("jump to save\n");
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
                     save_file();
                     err = 1;
                 }
@@ -342,7 +424,11 @@ int myvi(char *para) {
     cursor_freq = 0;
     kernel_set_cursor();
 
+<<<<<<< HEAD
     mystrcpy(file.path, filename);
+=======
+    // mystrcpy(file.path, filename);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
     load_file(filename);
 

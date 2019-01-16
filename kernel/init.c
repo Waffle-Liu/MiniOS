@@ -7,6 +7,7 @@
 #include <zjunix/bootmm.h>
 #include <zjunix/buddy.h>
 #include <zjunix/fs/fat.h>
+<<<<<<< HEAD
 //#include <zjunix/vfs/vfs.h>
 #include <zjunix/fs/vfs.h>
 #include <zjunix/fs/tree.h>
@@ -14,6 +15,12 @@
 #include <zjunix/pc.h>
 #include <zjunix/slab.h>
 #include <zjunix/vm.h>
+=======
+#include <zjunix/vfs/vfs.h>
+#include <zjunix/log.h>
+#include <zjunix/pc.h>
+#include <zjunix/slab.h>
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 #include <zjunix/syscall.h>
 #include <zjunix/time.h>
 #include "../usr/ps.h"
@@ -23,6 +30,7 @@
 void machine_info() {
     int row;
     int col;
+<<<<<<< HEAD
     kernel_printf("%s\n", "Buguntu"/*"ZJUNIX V1.0"*/);
     row = cursor_row;
     col = cursor_col;
@@ -31,6 +39,13 @@ void machine_info() {
     cursor_row = 29;
     cursor_col = 0;
     kernel_printf("%s", "Adapted by Rui Liu, Hongfu Liu and Jinglin Zhao.");
+=======
+    kernel_printf("\n%s\n", "412-UNIX V1.0");
+    row = cursor_row;
+    col = cursor_col;
+    cursor_row = 29;
+    kernel_printf("%s", "Created by Dorm 412 Block 32, Yuquan Campus, Zhejiang University.");
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     cursor_row = row;
     cursor_col = col;
     kernel_set_cursor();
@@ -46,6 +61,7 @@ void create_startup_process() {
         kernel_printf("create startup process failed!\n");
     else
         kernel_printf("kernel shell created!\n");
+<<<<<<< HEAD
     /* 
     unsigned int init_gp;
     asm volatile("la %0, _gp\n\t" : "=r"(init_gp));
@@ -57,6 +73,12 @@ void create_startup_process() {
 #pragma GCC pop_options
 
 void init_kernel() {/*
+=======
+}
+#pragma GCC pop_options
+
+void init_kernel() {
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     // init_done = 0;
     kernel_clear_screen(31);
     // Exception
@@ -74,8 +96,11 @@ void init_kernel() {/*
     log(LOG_OK, "Buddy.");
     init_slab();
     log(LOG_OK, "Slab.");
+<<<<<<< HEAD
     init_mmp();
     log(LOG_OK, "Memory Pool.");
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     log(LOG_END, "Memory Modules.");
 #ifndef VFS_DEBUG
     // File system
@@ -83,6 +108,7 @@ void init_kernel() {/*
     init_fs();
     log(LOG_END, "File System.");
 #endif
+<<<<<<< HEAD
     // Virtual File System
     log(LOG_START, "Virtual File System.");
     // new add vfs
@@ -102,6 +128,16 @@ void init_kernel() {/*
     log(LOG_OK, "File Tree.");
     log(LOG_END, "File Tree.");
 
+=======
+#ifdef VFS_DEBUG
+    // Virtual file system
+    log(LOG_START, "Virtual file System.");
+    if(!init_vfs())
+        log(LOG_END, "Virtual file System.");
+    else
+        log(LOG_FAIL, "Virtual file System.");
+#endif
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     // System call
     log(LOG_START, "System Calls.");
     init_syscall();
@@ -111,7 +147,10 @@ void init_kernel() {/*
     log(LOG_START, "PID Module.");
     init_pid();
     log(LOG_END, "PID Module.");
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     log(LOG_START, "Process Control Module.");
     init_pc();
     create_startup_process();
@@ -126,6 +165,7 @@ void init_kernel() {/*
     *GPIO_SEG = 0x11223344;
     // Enter shell
     while (1)
+<<<<<<< HEAD
         ;*/
         
     kernel_clear_screen(31);
@@ -188,5 +228,7 @@ void init_kernel() {/*
     *GPIO_SEG = 0x11223344;
     // Enter shell
     while (1)
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         ;
 }

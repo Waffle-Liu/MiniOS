@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include <zjunix/vm.h>
 #include <zjunix/slab.h>
 #include <zjunix/utils.h>
@@ -12,6 +13,20 @@ struct mm_pool mmp;
 
 /************mm_struct************/
 struct mm_struct *mm_create()
+=======
+#include "vm.h"
+#include <zjunix/slab.h>
+#include <zjunix/utils.h>
+#include <zjunix/pc.h>
+#include <driver/vga.h>
+#include <arch.h>
+
+
+
+
+/************mm_struct************/
+struct mm_struct* mm_create()
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 {
     struct mm_struct* mm;
 
@@ -20,7 +35,10 @@ struct mm_struct *mm_create()
     kernel_printf("mm_create: %x\n", mm);
 #endif //VMA_DEBUG
     if (mm) {
+<<<<<<< HEAD
         kernel_printf("mm_create: %x\n", mm);
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         kernel_memset(mm, 0, sizeof(*mm));
         mm->pgd = kmalloc(PAGE_SIZE); 
         if (mm->pgd) {
@@ -87,6 +105,7 @@ void pgd_delete(pgd_t* pgd)
 
 /*************VMA*************/
 // Find the first vma with ending address greater than addr
+<<<<<<< HEAD
 // struct vm_area_struct* find_vma(struct mm_struct* mm, unsigned long addr)
 // {
 //     struct vm_area_struct* vma = 0;
@@ -138,11 +157,29 @@ struct vm_area_struct *find_vma(struct mm_struct *mm, unsigned long addr)
             } 
             else
                 rb_node = rb_node->rb_right;
+=======
+struct vma_struct* find_vma(struct mm_struct* mm, unsigned long addr)
+{
+    struct vma_struct* vma = 0;
+
+    if (mm) {
+        vma = mm->mmap_cache;
+        if (vma && vma->vm_end>addr && vma->vm_start<=addr)
+            return vma;
+        vma = mm->mmap;
+        while (vma) {
+            if (vma->vm_end > addr) {
+                mm->mmap_cache = vma;
+                break;
+            }
+            vma = vma->vm_next;
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         }
     }
     return vma;
 }
 
+<<<<<<< HEAD
 
 /*
  * Same as find_vma, but also return a pointer to the previous VMA in *pprev.
@@ -164,11 +201,37 @@ struct vm_area_struct *find_vma_prev(struct mm_struct *mm, unsigned long addr, s
         {
             *pprev = rb_entry(rb_node, struct vm_area_struct, vm_rb);
             rb_node = rb_node->rb_right;
+=======
+// Find the first vma overlapped with start_addr~end_addr
+struct vma_struct* find_vma_intersection(struct mm_struct* mm, unsigned long start_addr, unsigned long end_addr)
+{
+    struct vma_struct* vma = find_vma(mm, start_addr);
+    if (vma && end_addr<=vma->vm_start)
+        vma = 0;
+    return vma;
+}
+
+// Return the first vma with ending address greater than addr, recording the previous vma
+struct vma_struct* find_vma_and_prev(struct mm_struct* mm, unsigned long addr, struct vma_struct** prev)
+{
+    struct vma_struct* vma = 0;
+    *prev = 0;
+    if (mm) {
+        vma = mm->mmap;
+        while (vma) {
+            if (vma->vm_end > addr) {
+                mm->mmap_cache = vma;
+                break;
+            }
+            *prev = vma;
+            vma = vma->vm_next;
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         }
     }
     return vma;
 }
 
+<<<<<<< HEAD
 // Find the first vma overlapped with start_addr~end_addr
 // struct vm_area_struct *find_vma_intersection(struct mm_struct* mm, unsigned long start_addr, unsigned long end_addr)
 // {
@@ -215,6 +278,21 @@ unsigned long get_unmapped_area(unsigned long addr, unsigned long len, unsigned 
             if (addr+len > KERNEL_ENTRY) return -1;
             if (!vma || addr+len<=vma->vm_start) 
             {
+=======
+// Get unmapped area starting after addr        目前省略了file, pgoff
+unsigned long get_unmapped_area(unsigned long addr, unsigned long len, unsigned long flags)
+{
+    struct vma_struct* vma;
+    struct mm_struct* mm = current_task->mm;         //全局变量，当前线程对应的task_struct
+
+    addr = UPPER_ALLIGN(addr, PAGE_SIZE);   // Allign to page size
+    if (addr+len > KERNEL_ENTRY) return -1;
+    
+    if (addr && addr+len<=KERNEL_ENTRY) {
+        for (vma=find_vma(mm, addr); ; vma=vma->vm_next) {
+            if (addr+len > KERNEL_ENTRY) return -1;
+            if (!vma || addr+len<=vma->vm_start) {
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
                 return addr;
             }
             addr = vma->vm_end;
@@ -225,12 +303,21 @@ unsigned long get_unmapped_area(unsigned long addr, unsigned long len, unsigned 
 }
 
 // Find vma preceding addr, assisting insertion
+<<<<<<< HEAD
 struct vm_area_struct* find_vma_prepare(struct mm_struct* mm, unsigned long addr)
 {
     struct vm_area_struct* vma = mm->mmap;
     struct vm_area_struct* prev = 0;
     while (vma) {
         if(addr < vma->vm_start) break;
+=======
+struct vma_struct* find_vma_prepare(struct mm_struct* mm, unsigned long addr)
+{
+    struct vma_struct* vma = mm->mmap;
+    struct vma_struct* prev = 0;
+    while (vma) {
+        if (addr < vma->vm_start) break;
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         prev = vma;
         vma = vma->vm_next;
     }
@@ -238,6 +325,7 @@ struct vm_area_struct* find_vma_prepare(struct mm_struct* mm, unsigned long addr
 }
 
 // Insert vma to the linked list
+<<<<<<< HEAD
 // void insert_vm_area_struct(struct mm_struct* mm, struct vm_area_struct* area)
 // {
 //     struct vm_area_struct* vma = find_vma_prepare(mm, area->vm_start);
@@ -338,16 +426,43 @@ void vma_link_rb(struct mm_struct *mm, struct vm_area_struct *vma, struct rb_nod
 void vma_rb_insert(struct vm_area_struct *vma, struct rb_root *root)
 {
     rb_insert_color(&vma->vm_rb, root);
+=======
+void insert_vma_struct(struct mm_struct* mm, struct vma_struct* area)
+{
+    struct vma_struct* vma = find_vma_prepare(mm, area->vm_start);
+#ifdef VMA_DEBUG
+    kernel_printf("Insert: %x  %x", vma, area->vm_start);
+#endif //VMA_DEBUG
+    if (!vma) {
+#ifdef VMA_DEBUG
+        kernel_printf("mmap init\n");
+#endif //VMA_DEBUG
+        mm->mmap = area;
+        area->vm_next = 0;
+    }
+    else {
+        area->vm_next = vma->vm_next;
+        vma->vm_next = area;
+    }
+    mm->map_count ++;
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 }
 
 // Mapping a region
 unsigned long do_map(unsigned long addr, unsigned long len, unsigned long flags)
 {
     struct mm_struct* mm = current_task->mm;
+<<<<<<< HEAD
     struct vm_area_struct *vma, *prev;
     if (!len) return addr;
     addr = get_unmapped_area(addr, len, flags);
     vma = kmalloc(sizeof(struct vm_area_struct));
+=======
+    struct vma_struct *vma, *prev;
+    if (!len) return addr;
+    addr = get_unmapped_area(addr, len, flags);
+    vma = kmalloc(sizeof(struct vma_struct));
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     if (!vma) return -1;
 
     vma->vm_mm = mm;
@@ -356,7 +471,11 @@ unsigned long do_map(unsigned long addr, unsigned long len, unsigned long flags)
 #ifdef VMA_DEBUG
     kernel_printf("Do map: %x  %x\n", vma->vm_start, vma->vm_end);
 #endif //VMA_DEBUG
+<<<<<<< HEAD
     insert_vm_struct(mm, vma);
+=======
+    insert_vma_struct(mm, vma);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     return addr;
 }
 
@@ -364,9 +483,15 @@ unsigned long do_map(unsigned long addr, unsigned long len, unsigned long flags)
 int do_unmap(unsigned long addr, unsigned long len)
 {
     struct mm_struct* mm = current_task->mm;
+<<<<<<< HEAD
     struct vm_area_struct *vma, *prev;
     if (addr>KERNEL_ENTRY || len+addr>KERNEL_ENTRY) return -1;  // Bad addr
     vma = find_vma_prev(mm, addr, &prev);
+=======
+    struct vma_struct *vma, *prev;
+    if (addr>KERNEL_ENTRY || len+addr>KERNEL_ENTRY) return -1;  // Bad addr
+    vma = find_vma_and_prev(mm, addr, &prev);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     if (!vma || vma->vm_start>=addr+len) return 0;      // It has not been mapped
 #ifdef VMA_DEBUG
     kernel_printf("do_unmap. %x %x\n", addr, vma->vm_start);
@@ -401,10 +526,17 @@ int do_unmap(unsigned long addr, unsigned long len)
 // Free all the vmas
 void exit_mmap(struct mm_struct* mm)
 {
+<<<<<<< HEAD
     struct vm_area_struct* vmap = mm->mmap;
     mm->mmap = mm->mmap_cache = 0;
     while (vmap) {
         struct vm_area_struct* next = vmap->vm_next;
+=======
+    struct vma_struct* vmap = mm->mmap;
+    mm->mmap = mm->mmap_cache = 0;
+    while (vmap) {
+        struct vma_struct* next = vmap->vm_next;
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         kfree(vmap);
         mm->map_count--;
         vmap = next;
@@ -420,6 +552,7 @@ void exit_mmap(struct mm_struct* mm)
 int is_in_vma(unsigned long addr)
 {
     struct mm_struct* mm = current_task->mm;
+<<<<<<< HEAD
     struct vm_area_struct *vma = find_vma(mm, addr);
     if (!vma || vma->vm_start>addr) return 0;
     else return 1;
@@ -584,3 +717,9 @@ void mmp_info(){
         kernel_printf("\tno:%x size:%x freelist:%x \n", i, mmp.mmp_list[i].block_size, mmp.mmp_list[i].free_header);
     }
 }
+=======
+    struct vma_struct *vma = find_vma(mm, addr);
+    if (!vma || vma->vm_start>addr) return 0;
+    else return 1;
+}
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab

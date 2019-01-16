@@ -42,7 +42,10 @@ void tlb_refill(unsigned int bad_addr) {
     }
 
     pgd = current_task->mm->pgd;
+<<<<<<< HEAD
     kernel_printf("current task page in tlbtest: %x\n", pgd);
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     if (pgd == 0) {
         kernel_printf("tlb_refill: pgd == NULL\n");
         goto error_0;
@@ -50,6 +53,13 @@ void tlb_refill(unsigned int bad_addr) {
 
     bad_addr &= PAGE_MASK;
     
+<<<<<<< HEAD
+=======
+    //搜索bad_addr是否在vma中,如果不在任何vma中，报错
+    //....... 
+    //To be done
+    
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     pde_index = bad_addr >> PGD_SHIFT;
     pde = pgd[pde_index];
     pde &= PAGE_MASK;
@@ -83,7 +93,11 @@ void tlb_refill(unsigned int bad_addr) {
             kernel_printf("page not exist\n");
         #endif
 
+<<<<<<< HEAD
         pte = (unsigned int)kmalloc(PAGE_SIZE); 
+=======
+        pte = (unsigned int)kmalloc(PAGE_SIZE);  //要考虑物理地址？？？
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
         if (pte == 0) {
             kernel_printf("tlb_refill: alloc page failed!\n");
@@ -138,8 +152,13 @@ void tlb_refill(unsigned int bad_addr) {
         entry_lo0 = (pte_near_phy >> 12) << 6;
         entry_lo1 = (pte_near >> 12) << 6;
     }
+<<<<<<< HEAD
     entry_lo0 |= (3 << 3);   
     entry_lo1 |= (3 << 3);   
+=======
+    entry_lo0 |= (3 << 3);   //cached ??
+    entry_lo1 |= (3 << 3);   //cached ??
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     entry_lo0 |= 0x06;      //D = 1, V = 1, G = 0
     entry_lo1 |= 0x06;
 
@@ -194,6 +213,14 @@ void tlb_refill(unsigned int bad_addr) {
             }
         }
     }
+<<<<<<< HEAD
+=======
+    // if (count_2 == 4) {
+    //     kernel_printf("")
+    //     while(1)
+    //         ;
+    // }
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
     return;
 
@@ -227,11 +254,20 @@ void do_exceptions(unsigned int status, unsigned int cause, context* pt_context,
         struct task_struct* pcb;
         unsigned int badVaddr;
         asm volatile("mfc0 %0, $8\n\t" : "=r"(badVaddr));
+<<<<<<< HEAD
         
         pcb = current_task;
         kernel_printf("\nProcess %s exited due to exception cause=%x;\n", pcb->name, cause);
         kernel_printf("status=%x, EPC=%x, BadVaddr=%x\n", status, pcb->context.epc, badVaddr);
   
+=======
+        //modified by Ice
+        pcb = current_task;
+        kernel_printf("\nProcess %s exited due to exception cause=%x;\n", pcb->name, cause);
+        kernel_printf("status=%x, EPC=%x, BadVaddr=%x\n", status, pcb->context.epc, badVaddr);
+    //    pc_kill_syscall(status, cause, pt_context);
+            //Done by Ice
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         while (1)
             ;
     }

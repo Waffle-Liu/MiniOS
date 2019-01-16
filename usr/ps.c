@@ -5,6 +5,7 @@
 #include <zjunix/bootmm.h>
 #include <zjunix/buddy.h>
 #include <zjunix/fs/fat.h>
+<<<<<<< HEAD
 #include <zjunix/fs/vfs.h>
 #include <zjunix/fs/tree.h>
 #include <zjunix/slab.h>
@@ -15,15 +16,27 @@
 #include <zjunix/pc.h>
 #include <driver/vga.h>
 #include "../kernel/fs/fat/fat.h"
+=======
+#include <zjunix/vfs/vfs.h>
+#include <zjunix/slab.h>
+#include <zjunix/time.h>
+#include <zjunix/utils.h>
+#include <driver/vga.h>
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 #include "../usr/ls.h"
 #include "exec.h"
 #include "myvi.h"
 
+<<<<<<< HEAD
 
 char ps_buffer[64];
 int ps_buffer_index;
 int ps_buffer_base;
 int ps_buffer_ins;
+=======
+char ps_buffer[64];
+int ps_buffer_index;
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
 struct lock_t lk;
 
@@ -43,6 +56,7 @@ void test_proc() {
         }
     }
 }
+<<<<<<< HEAD
 static int strlen(char *s){
     int i=0;
     while(s[i++]);
@@ -109,6 +123,9 @@ exit:
 fail:
     kernel_printf("fail to relocate\n", buf);
 }
+=======
+
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 void testMem() {
     int i;
     int total = 100;
@@ -202,6 +219,7 @@ int sync_demo_create() {
 //     pc_create(asid, test_proc, (unsigned int)kmalloc(4096), init_gp, "test");
 //     return 0;
 // }
+<<<<<<< HEAD
 void ps() {
     kernel_printf("Press any key to enter shell.\n");
     kernel_getchar();
@@ -228,11 +246,31 @@ void ps() {
                 ps_buffer_ins++;
             }
             kernel_set_cursor();
+=======
+
+void ps() {
+    kernel_printf("Press any key to enter shell.\n");
+    kernel_getchar();
+    char c;
+    ps_buffer_index = 0;
+    ps_buffer[0] = 0;
+    kernel_clear_screen(31);
+    // kernel_puts("PS>", VGA_WHITE, VGA_BLACK);
+    // kernel_puts("PowerShell\n", VGA_WHITE, VGA_BLACK);
+    kernel_puts("PS", VGA_GREEN, VGA_BLACK);
+    kernel_puts(":", VGA_WHITE, VGA_BLACK);
+    kernel_puts(pwd_dentry->d_name.name, VGA_YELLOW, VGA_BLACK);
+    kernel_puts(">", VGA_WHITE, VGA_BLACK);
+    while (1) {
+        c = kernel_getchar();
+        if (c == '\n') {
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
             ps_buffer[ps_buffer_index] = 0;
             if (kernel_strcmp(ps_buffer, "exit") == 0) {
                 ps_buffer_index = 0;
                 ps_buffer[0] = 0;
                 kernel_printf("\nPowerShell exit.\n");
+<<<<<<< HEAD
             }
             else{
                 if(ps_buffer_index>0){
@@ -348,6 +386,28 @@ void ps() {
                 ps_buffer[ps_buffer_ins++] = c;
                 cursor_col++;
                 kernel_set_cursor();
+=======
+            } else
+                parse_cmd();
+            ps_buffer_index = 0;
+            // kernel_puts("PS>", VGA_WHITE, VGA_BLACK);
+            // kernel_puts("PowerShell\n", VGA_WHITE, VGA_BLACK);
+            kernel_puts("PS", VGA_GREEN, VGA_BLACK);
+            kernel_puts(":", VGA_WHITE, VGA_BLACK);
+            kernel_puts(pwd_dentry->d_name.name, VGA_YELLOW, VGA_BLACK);
+            kernel_puts(">", VGA_WHITE, VGA_BLACK);
+        } else if (c == 0x08) {
+            if (ps_buffer_index) {
+                ps_buffer_index--;
+                kernel_putchar_at(' ', 0xfff, 0, cursor_row, cursor_col - 1);
+                cursor_col--;
+                kernel_set_cursor();
+            }
+        } else {
+            if (ps_buffer_index < 63) {
+                ps_buffer[ps_buffer_index++] = c;
+                kernel_putchar(c, 0xfff, 0);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
             }
         }
     }
@@ -359,6 +419,7 @@ void parse_cmd() {
     char c;
     kernel_putchar('\n', 0, 0);
     char sd_buffer[8192];
+<<<<<<< HEAD
     int i = 0,j,v;
     int len; /* The length of string */
     char *param; /* The parameter of instruction */
@@ -371,6 +432,10 @@ void parse_cmd() {
         if(ps_buffer[i]==' '&&ps_buffer[i-1]==' ')
             for(j=i+1;j<63;j++)
                 ps_buffer[j-1]=ps_buffer[j];
+=======
+    int i = 0;
+    char *param;
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     for (i = 0; i < 63; i++) {
         if (ps_buffer[i] == ' ') {
             ps_buffer[i] = 0;
@@ -397,6 +462,7 @@ void parse_cmd() {
         for (i = 0; i < 512; i++)
             sd_buffer[i] = i;
         sd_write_block(sd_buffer, 23128, 1);
+<<<<<<< HEAD
         kernel_puts("sdwi 23128\n", 0xfff, 0);
     } else if (kernel_strcmp(ps_buffer, "sdr") == 0) {
         for (i = 0; i < 512; i++)
@@ -413,6 +479,18 @@ void parse_cmd() {
             kernel_printf("%x%x ", sd_buffer[i]>>4,sd_buffer[i]&0xf);
             if(i&&(i&0xf)==0)
                 kernel_printf("\n");
+=======
+        kernel_puts("sdwi\n", 0xfff, 0);
+    } else if (kernel_strcmp(ps_buffer, "sdr") == 0) {
+        for (i = 0; i < 512; i++)
+            sd_buffer[i] = 0;
+
+        i = sd_read_block(sd_buffer, 23128, 1);
+
+        kernel_printf("read_result: %d\n", i);
+        for (i = 0; i < 512; i++) {
+            kernel_printf("%d ", sd_buffer[i]);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         }
         kernel_putchar('\n', 0xfff, 0);
     } else if (kernel_strcmp(ps_buffer, "sdwz") == 0) {
@@ -421,6 +499,7 @@ void parse_cmd() {
         }
         sd_write_block(sd_buffer, 23128, 1);
         kernel_puts("sdwz\n", 0xfff, 0);
+<<<<<<< HEAD
     } else if (kernel_strcmp(ps_buffer, "bootmmif") == 0) {
         bootmap_info("bootmm");
     } else if (kernel_strcmp(ps_buffer, "buddyif") == 0) {
@@ -429,6 +508,11 @@ void parse_cmd() {
         slab_info();
     } else if (kernel_strcmp(ps_buffer, "mmpif") == 0) {
         mmp_info();
+=======
+    } else if (kernel_strcmp(ps_buffer, "mminfo") == 0) {
+        bootmap_info("bootmm");
+        buddy_info();
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     } else if (kernel_strcmp(ps_buffer, "mmtest") == 0) {
         kernel_printf("kmalloc : %x, size = 1KB\n", kmalloc(1024));
     } else if (kernel_strcmp(ps_buffer, "ps") == 0) {
@@ -497,6 +581,7 @@ void parse_cmd() {
         result = sync_demo_create();
         kernel_printf("proc return with %d\n", result);
     }
+<<<<<<< HEAD
     
     else if (kernel_strcmp(ps_buffer, "send") == 0) {
 		kernel_printf("sending message\n");
@@ -711,6 +796,20 @@ void parse_cmd() {
     else if (kernel_strcmp(ps_buffer, "vmpro") == 0) {
         vmprog(0, 0);
         kernel_printf("tlb test");
+=======
+
+    else if (kernel_strcmp(ps_buffer, "cat") == 0) {
+        result = vfs_cat(param);
+    }
+    else if (kernel_strcmp(ps_buffer, "rm") == 0) {
+        result = vfs_rm(param);
+    }
+    else if (kernel_strcmp(ps_buffer, "ls") == 0) {
+        result = vfs_ls(param);
+    }
+    else if (kernel_strcmp(ps_buffer, "cd") == 0) {
+        result = vfs_cd(param);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     }
 
     else {

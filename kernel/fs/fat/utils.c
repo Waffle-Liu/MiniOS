@@ -1,13 +1,23 @@
 #include "utils.h"
 #include <driver/sd.h>
 #include "fat.h"
+<<<<<<< HEAD
 
 /* Read block for FAT (starts from first block of partition 1) */
+=======
+#include <zjunix/vfs/vfs.h>
+
+#ifndef VFS_DEBUG
+/* Read/Write block for FAT (starts from first block of partition 1) */
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 u32 read_block(u8 *buf, u32 addr, u32 count) {
     return sd_read_block(buf, addr, count);
 }
 
+<<<<<<< HEAD
 /* Write block for FAT (starts from first block of partition 1) */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 u32 write_block(u8 *buf, u32 addr, u32 count) {
     return sd_write_block(buf, addr, count);
 }
@@ -34,6 +44,10 @@ void set_u32(u8 *ch, u32 num) {
     *(ch + 3) = (u8)((num >> 24) & 0xFF);
 }
 
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 /* work around */
 u32 fs_wa(u32 num) {
     // return the bits of `num`
@@ -43,12 +57,18 @@ u32 fs_wa(u32 num) {
     return i;
 }
 
+<<<<<<< HEAD
 /* get the size of file of entry */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 u32 get_entry_filesize(u8 *entry) {
     return get_u32(entry + 28);
 }
 
+<<<<<<< HEAD
 /* get the attribute of entry */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 u32 get_entry_attr(u8 *entry) {
     return entry[11];
 }

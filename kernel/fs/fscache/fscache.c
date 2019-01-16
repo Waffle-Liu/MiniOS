@@ -3,6 +3,7 @@
 
 extern struct fs_info fat_info;
 
+<<<<<<< HEAD
 u32 LRU[256];
 u32 LRU_index;
 
@@ -27,6 +28,8 @@ u32 fs_clr_4k_lru(BUF_4K *buf, u32 *clock_head, u32 size, u32 cur)
 }
 
 /* find victim in 4k byte buffer */
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 u32 fs_victim_4k(BUF_4K *buf, u32 *clock_head, u32 size) {
     u32 i;
     u32 index = *clock_head;
@@ -137,7 +140,11 @@ fs_clr_4k_err:
     return 1;
 }
 
+<<<<<<< HEAD
 /* find victim in 512-byte buffer */
+=======
+/* find victim in 512-byte/4k buffer */
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 u32 fs_victim_512(BUF_512 *buf, u32 *clock_head, u32 size) {
     u32 i;
     u32 index = *clock_head;

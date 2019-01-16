@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MYUNIX
 
 ## 简介
@@ -31,3 +32,8 @@
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](./LICENSE)
 
 此工程遵循 BSD3 协议
+=======
+
+# MiniOS
+A derivation of ZJUNIX.
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab

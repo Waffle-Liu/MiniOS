@@ -1,6 +1,9 @@
 #include <driver/vga.h>
 #include <zjunix/fs/fat.h>
+<<<<<<< HEAD
 #include "../kernel/fs/fat/fat.h"
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
 char *cut_front_blank(char *str) {
     char *s = str;
@@ -48,7 +51,10 @@ unsigned int each_param(char *para, char *word, unsigned int off, char ch) {
 
 int ls(char *para) {
     char pwd[128];
+<<<<<<< HEAD
     char fullpath[256];
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     struct dir_entry_attr entry;
     char name[32];
     char *p = para;
@@ -60,11 +66,17 @@ int ls(char *para) {
     p = cut_front_blank(p);
     p_len = strlen(p);
     next = each_param(p, pwd, 0, ' ');
+<<<<<<< HEAD
     fs_fullpath(pwd,fullpath,256);
 
     if (fs_open_dir(&dir, fullpath)) {
         kernel_printf("open dir(%s) failed : No such directory! \n", pwd);
         kernel_printf("%s\n", fullpath);
+=======
+
+    if (fs_open_dir(&dir, pwd)) {
+        kernel_printf("open dir(%s) failed : No such directory!\n", pwd);
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
         return 1;
     }
 
@@ -87,6 +99,7 @@ readdir:
 
     return 0;
 }
+<<<<<<< HEAD
 int cd(char *para){
     char pwd[128];
     char fullpath[256];
@@ -110,3 +123,5 @@ int cd(char *para){
     while(i<192)relative_path[i++]='\0';
     return 0;
 }
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab

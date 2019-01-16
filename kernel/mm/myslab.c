@@ -5,7 +5,10 @@
 
 #define KMEM_ADDR(PAGE, BASE) ((((PAGE) - (BASE)) << PAGE_SHIFT) | 0x80000000)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 /*
  * one list of PAGE_SHIFT(now it's 12) possbile memory size
  * 96, 192, 8, 16, 32, 64, 128, 256, 512, 1024, (2 undefined)
@@ -37,16 +40,25 @@ void init_each_slab(struct kmem_cache *cache, unsigned int size) {
 
 void init_slab() {
     unsigned int i;
+<<<<<<< HEAD
+=======
+
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     for (i = 0; i < PAGE_SHIFT; i++) {
         init_each_slab(&(kmalloc_caches[i]), size_kmem_cache[i]);
     }
 #ifdef SLAB_DEBUG
+<<<<<<< HEAD
     kernel_printf("Slub:\n");
+=======
+    kernel_printf("Setup Slub ok :\n");
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     kernel_printf("\tcurrent slab cache size list:\n\t");
     for (i = 0; i < PAGE_SHIFT; i++) {
         kernel_printf("%x %x ", kmalloc_caches[i].objsize, (unsigned int)(&(kmalloc_caches[i])));
     }
     kernel_printf("\n");
+<<<<<<< HEAD
 #endif
 }
 
@@ -59,6 +71,9 @@ void slab_info(){
     }
     kernel_printf("\n");
 
+=======
+#endif  // ! SLAB_DEBUG
+>>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 }
 
 
