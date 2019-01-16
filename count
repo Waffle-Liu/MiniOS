@@ -1,0 +1,21 @@
+#! /bin/bash
+
+dir="~/Share/zjunix/"
+dir1="./kernel/vfs/"
+dir2="./include/zjunix/vfs/"
+
+echo "$dir1:"
+file1=$(ls $dir1 | grep '\.c$')
+cd $dir1
+wc -l $file1
+c=`wc -l $file1 | tail -n 1 | awk '{print $1}'`
+
+cd ..
+cd ..
+echo "$dir2:"
+file2=$(ls $dir2 | grep '\.h$')
+cd $dir2
+wc -l $file2
+h=`wc -l $file2 | tail -n 1 | awk '{print $1}'`
+total=$[$c+$h]
+echo "You have written about $total lines of code."
