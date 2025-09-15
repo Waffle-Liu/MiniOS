@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #ifndef  _ZJUNIX_VM_H
 #define  _ZJUNIX_VM_H
 
@@ -20,18 +19,18 @@
 #define  MP_MALLOC_FAIL 0
 // extern struct page;
 
-static unsigned int mmpsize[MAX_POOL_SIZE] = {16, 64, 256, 1024, 2048};
+static unsigned int mmpsize[MAX_POOL_SIZE] = { 16, 64, 256, 1024, 2048 };
 
 struct mm_struct;
 
 struct mm_struct {
-    struct vm_area_struct *mmap;        // VMA list
-    struct vm_area_struct *mmap_cache;  // Latest used VMA
+    struct vm_area_struct* mmap;        // VMA list
+    struct vm_area_struct* mmap_cache;  // Latest used VMA
     struct rb_root mm_rb;
 
     int map_count;                  // VMA count
 
-    pgd_t *pgd;                     // Page table entry
+    pgd_t* pgd;                     // Page table entry
 
     unsigned int start_code, end_code;
     unsigned int start_data, end_data;
@@ -40,9 +39,9 @@ struct mm_struct {
 };
 
 struct vm_area_struct {
-    struct mm_struct *vm_mm;
+    struct mm_struct* vm_mm;
     unsigned long vm_start, vm_end;
-    struct vm_area_struct *vm_prev, *vm_next;
+    struct vm_area_struct* vm_prev, * vm_next;
 
     struct rb_node vm_rb;
     //struct vm_operations_struct *vm_ops;
@@ -59,25 +58,22 @@ struct vm_area_struct {
 //     int (*unmap)(struct vm_area_struct *area, unsigned long, size_t);        
 // };
 
-struct mm_pool_node
-{   
+struct mm_pool_node {
     unsigned int index;
-    unsigned char *data;
-    struct mm_pool_node *next;
+    unsigned char* data;
+    struct mm_pool_node* next;
 };
 
-struct mm_pool_list
-{
+struct mm_pool_list {
     unsigned int total_cnt;
     unsigned int used_cnt;
     unsigned int block_size;
 
-    struct mm_pool_node *free_header;
-    struct mm_pool_node *used_header;
+    struct mm_pool_node* free_header;
+    struct mm_pool_node* used_header;
 };
 
-struct mm_pool
-{  
+struct mm_pool {
     struct mm_pool_list mmp_list[MAX_POOL_SIZE];
 };
 
@@ -102,37 +98,18 @@ struct vm_area_struct* find_vma_intersection(struct mm_struct* mm, unsigned long
 struct vm_area_struct* find_vma_prev(struct mm_struct* mm, unsigned long addr, struct vm_area_struct** prev);
 struct vm_area_struct* find_vma_prepare(struct mm_struct* mm, unsigned long addr);
 int insert_vm_struct(struct mm_struct* mm, struct vm_area_struct* area);
-int find_vma_links(struct mm_struct *mm, unsigned long addr, unsigned long end, struct vm_area_struct **pprev, struct rb_node ***rb_link, struct rb_node **rb_parent)
-void vma_link(struct mm_struct *mm, struct vm_area_struct *vma, struct vm_area_struct *prev, struct rb_node **rb_link, struct rb_node *rb_parent);
-void vma_link_list(struct mm_struct *mm, struct vm_area_struct *vma, struct vm_area_struct *prev, struct rb_node *rb_parent);
-void vma_link_rb(struct mm_struct *mm, struct vm_area_struct *vma, struct rb_node **rb_link, struct rb_node *rb_parent);
-void vma_rb_insert(struct vm_area_struct *vma, struct rb_root *root);
+int find_vma_links(struct mm_struct* mm, unsigned long addr, unsigned long end, struct vm_area_struct** pprev, struct rb_node*** rb_link, struct rb_node** rb_parent)
+void vma_link(struct mm_struct* mm, struct vm_area_struct* vma, struct vm_area_struct* prev, struct rb_node** rb_link, struct rb_node* rb_parent);
+void vma_link_list(struct mm_struct* mm, struct vm_area_struct* vma, struct vm_area_struct* prev, struct rb_node* rb_parent);
+void vma_link_rb(struct mm_struct* mm, struct vm_area_struct* vma, struct rb_node** rb_link, struct rb_node* rb_parent);
+void vma_rb_insert(struct vm_area_struct* vma, struct rb_root* root);
 
 void exit_mmap(struct mm_struct* mm);
 void pgd_delete(pgd_t* pgd);
 
 extern unsigned int init_mmp();
-extern struct mm_pool_node *mmp_malloc(unsigned int size);
-extern void mmp_free(struct mm_pool_node *free_node);
+extern struct mm_pool_node* mmp_malloc(unsigned int size);
+extern void mmp_free(struct mm_pool_node* free_node);
 extern void del_pool();
 
 #endif
-=======
-#ifndef _VM_H
-#define _VM_H
-
-#include <zjunix/vm.h>
-
-
-/*************VMA*************/
-struct vma_struct* find_vma(struct mm_struct* mm, unsigned long addr);
-unsigned long get_unmapped_area(unsigned long addr, unsigned long len, unsigned long flags);
-struct vma_struct* find_vma_intersection(struct mm_struct* mm, unsigned long start_addr, unsigned long end_addr);
-struct vma_struct* find_vma_and_prev(struct mm_struct* mm, unsigned long addr, struct vma_struct** prev);
-struct vma_struct* find_vma_prepare(struct mm_struct* mm, unsigned long addr);
-void insert_vma_struct(struct mm_struct* mm, struct vma_struct* area);
-void exit_mmap(struct mm_struct* mm);
-void pgd_delete(pgd_t* pgd);
-
-#endif
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab

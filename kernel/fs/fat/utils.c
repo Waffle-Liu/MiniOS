@@ -1,53 +1,39 @@
 #include "utils.h"
 #include <driver/sd.h>
 #include "fat.h"
-<<<<<<< HEAD
 
 /* Read block for FAT (starts from first block of partition 1) */
-=======
-#include <zjunix/vfs/vfs.h>
-
-#ifndef VFS_DEBUG
-/* Read/Write block for FAT (starts from first block of partition 1) */
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-u32 read_block(u8 *buf, u32 addr, u32 count) {
+u32 read_block(u8* buf, u32 addr, u32 count) {
     return sd_read_block(buf, addr, count);
 }
 
-<<<<<<< HEAD
 /* Write block for FAT (starts from first block of partition 1) */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-u32 write_block(u8 *buf, u32 addr, u32 count) {
+u32 write_block(u8* buf, u32 addr, u32 count) {
     return sd_write_block(buf, addr, count);
 }
 
 /* char to u16/u32 */
-u16 get_u16(u8 *ch) {
+u16 get_u16(u8* ch) {
     return (*ch) + ((*(ch + 1)) << 8);
 }
 
-u32 get_u32(u8 *ch) {
+u32 get_u32(u8* ch) {
     return (*ch) + ((*(ch + 1)) << 8) + ((*(ch + 2)) << 16) + ((*(ch + 3)) << 24);
 }
 
 /* u16/u32 to char */
-void set_u16(u8 *ch, u16 num) {
+void set_u16(u8* ch, u16 num) {
     *ch = (u8)(num & 0xFF);
     *(ch + 1) = (u8)((num >> 8) & 0xFF);
 }
 
-void set_u32(u8 *ch, u32 num) {
+void set_u32(u8* ch, u32 num) {
     *ch = (u8)(num & 0xFF);
     *(ch + 1) = (u8)((num >> 8) & 0xFF);
     *(ch + 2) = (u8)((num >> 16) & 0xFF);
     *(ch + 3) = (u8)((num >> 24) & 0xFF);
 }
 
-<<<<<<< HEAD
-=======
-#endif
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 /* work around */
 u32 fs_wa(u32 num) {
     // return the bits of `num`
@@ -57,29 +43,23 @@ u32 fs_wa(u32 num) {
     return i;
 }
 
-<<<<<<< HEAD
 /* get the size of file of entry */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-u32 get_entry_filesize(u8 *entry) {
+u32 get_entry_filesize(u8* entry) {
     return get_u32(entry + 28);
 }
 
-<<<<<<< HEAD
 /* get the attribute of entry */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-u32 get_entry_attr(u8 *entry) {
+u32 get_entry_attr(u8* entry) {
     return entry[11];
 }
 
 /* DIR_FstClusHI/LO to clus */
-u32 get_start_cluster(const FILE *file) {
+u32 get_start_cluster(const FILE* file) {
     return (file->entry.attr.starthi << 16) + (file->entry.attr.startlow);
 }
 
 /* Get fat entry value for a cluster */
-u32 get_fat_entry_value(u32 clus, u32 *ClusEntryVal) {
+u32 get_fat_entry_value(u32 clus, u32* ClusEntryVal) {
     u32 ThisFATSecNum;
     u32 ThisFATEntOffset;
     u32 index;
@@ -122,7 +102,7 @@ fs_modify_fat_err:
 }
 
 /* Determine FAT entry for cluster */
-void cluster_to_fat_entry(u32 clus, u32 *ThisFATSecNum, u32 *ThisFATEntOffset) {
+void cluster_to_fat_entry(u32 clus, u32* ThisFATSecNum, u32* ThisFATEntOffset) {
     u32 FATOffset = clus << 2;
     *ThisFATSecNum = fat_info.BPB.attr.reserved_sectors + (FATOffset >> 9) + fat_info.base_addr;
     *ThisFATEntOffset = FATOffset & 511;

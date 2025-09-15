@@ -9,18 +9,12 @@
 #include "debug.h"
 #endif  // ! FS_DEBUG
 
-<<<<<<< HEAD
-char relative_path[192]="/";
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
+char relative_path[192] = "/";
 /* fat buffer clock head */
 u32 fat_clock_head = 0;
 BUF_512 fat_buf[FAT_BUF_NUM];
 
-<<<<<<< HEAD
 /* filename */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 u8 filename11[13];
 u8 new_alloc_empty[PAGE_SIZE];
 
@@ -101,10 +95,6 @@ init_fat_info_err:
     return 1;
 }
 
-<<<<<<< HEAD
-/* Init fat buffer */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 void init_fat_buf() {
     int i = 0;
     for (i = 0; i < FAT_BUF_NUM; i++) {
@@ -113,10 +103,6 @@ void init_fat_buf() {
     }
 }
 
-<<<<<<< HEAD
-/* Init directory buffer */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 void init_dir_buf() {
     int i = 0;
     for (i = 0; i < DIR_DATA_BUF_NUM; i++) {
@@ -127,10 +113,6 @@ void init_dir_buf() {
 
 /* FAT Initialize */
 u32 init_fs() {
-<<<<<<< HEAD
-    /* if success then return 1 or return 0*/
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     u32 succ = init_fat_info();
     if (0 != succ)
         goto fs_init_err;
@@ -177,7 +159,8 @@ u32 read_fat_sector(u32 ThisFATSecNum) {
 
         fat_buf[index].cur = ThisFATSecNum;
         fat_buf[index].state = 1;
-    } else
+    }
+    else
         fat_buf[index].state |= 0x01;
 
     return index;
@@ -186,7 +169,7 @@ read_fat_sector_err:
 }
 
 /* path convertion */
-u32 fs_next_slash(u8 *f) {
+u32 fs_next_slash(u8* f) {
     u32 i, j, k;
     u8 chr11[13];
     for (i = 0; (*(f + i) != 0) && (*(f + i) != '/'); i++)
@@ -223,7 +206,7 @@ u32 fs_next_slash(u8 *f) {
 }
 
 /* strcmp */
-u32 fs_cmp_filename(const u8 *f1, const u8 *f2) {
+u32 fs_cmp_filename(const u8* f1, const u8* f2) {
     u32 i;
     for (i = 0; i < 11; i++) {
         if (f1[i] != f2[i])
@@ -234,22 +217,16 @@ u32 fs_cmp_filename(const u8 *f1, const u8 *f2) {
 }
 
 /* Find a file, only absolute path with starting '/' accepted */
-u32 fs_find(FILE *file) {
-<<<<<<< HEAD
+u32 fs_find(FILE* file) {
     /* get the filepath of file */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-    u8 *f = file->path;
+    u8* f = file->path;
     u32 next_slash;
     u32 i, k;
     u32 next_clus;
     u32 index;
     u32 sec;
 
-<<<<<<< HEAD
     /* filepath does not start with '/' */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     if (*(f++) != '/')
         goto fs_find_err;
 
@@ -289,7 +266,8 @@ u32 fs_find(FILE *file) {
                     index = fs_read_512(dir_data_buf, dir_data_buf[index].cur + 1, &dir_data_clock_head, DIR_DATA_BUF_NUM);
                     if (index == 0xffffffff)
                         goto fs_find_err;
-                } else {
+                }
+                else {
                     /* Read next cluster of current directory */
                     if (get_fat_entry_value(dir_data_buf[index].cur - fat_info.BPB.attr.sectors_per_cluster + 1, &next_clus) == 1)
                         goto fs_find_err;
@@ -298,13 +276,14 @@ u32 fs_find(FILE *file) {
                         index = fs_read_512(dir_data_buf, fs_dataclus2sec(next_clus), &dir_data_clock_head, DIR_DATA_BUF_NUM);
                         if (index == 0xffffffff)
                             goto fs_find_err;
-                    } else
+                    }
+                    else
                         goto after_fs_find;
                 }
             }
         }
 
-    after_fs_find:
+after_fs_find:
         /* If not found */
         if (file->dir_entry_pos == 0xFFFFFFFF)
             goto fs_find_ok;
@@ -326,7 +305,8 @@ u32 fs_find(FILE *file) {
             index = fs_read_512(dir_data_buf, fs_dataclus2sec(next_clus), &dir_data_clock_head, DIR_DATA_BUF_NUM);
             if (index == 0xffffffff)
                 goto fs_find_err;
-        } else
+        }
+        else
             goto fs_find_err;
     }
 fs_find_ok:
@@ -336,7 +316,7 @@ fs_find_err:
 }
 
 /* Open: just do initializing & fs_find */
-u32 fs_open(FILE *file, u8 *filename) {
+u32 fs_open(FILE* file, u8* filename) {
     u32 i;
 
     /* Local buffer initialize */
@@ -391,7 +371,7 @@ fs_fflush_err:
 }
 
 /* Close: write all buf in memory to SD */
-u32 fs_close(FILE *file) {
+u32 fs_close(FILE* file) {
     u32 i;
     u32 index;
 
@@ -419,7 +399,7 @@ fs_close_err:
 }
 
 /* Read from file */
-u32 fs_read(FILE *file, u8 *buf, u32 count) {
+u32 fs_read(FILE* file, u8* buf, u32 count) {
     u32 start_clus, start_byte;
     u32 end_clus, end_byte;
     u32 filesize = file->entry.attr.size;
@@ -430,11 +410,7 @@ u32 fs_read(FILE *file, u8 *buf, u32 count) {
     u32 index;
 
 #ifdef FS_DEBUG
-<<<<<<< HEAD
     kernel_printf("  fs_read: count %d\n", count);
-=======
-    kernel_printf("fs_read: count %d\n", count);
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     disable_interrupts();
 #endif  // ! FS_DEBUG
     /* If file is empty */
@@ -455,17 +431,10 @@ u32 fs_read(FILE *file, u8 *buf, u32 count) {
     end_byte = (file->loc + count - 1) & ((fat_info.BPB.attr.sectors_per_cluster << 9) - 1);
 
 #ifdef FS_DEBUG
-<<<<<<< HEAD
     kernel_printf("  start cluster: %d\n", start_clus);
     kernel_printf("  start byte: %d\n", start_byte);
     kernel_printf("  end cluster: %d\n", end_clus);
     kernel_printf("  end byte: %d\n", end_byte);
-=======
-    kernel_printf("start cluster: %d\n", start_clus);
-    kernel_printf("start byte: %d\n", start_byte);
-    kernel_printf("end cluster: %d\n", end_clus);
-    kernel_printf("end byte: %d\n", end_byte);
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 #endif  // ! FS_DEBUG
     /* Open first cluster to read */
     for (i = 0; i < start_clus; i++) {
@@ -504,11 +473,7 @@ u32 fs_read(FILE *file, u8 *buf, u32 count) {
 fs_read_end:
 
 #ifdef FS_DEBUG
-<<<<<<< HEAD
     kernel_printf("  fs_read: count %d\n", count);
-=======
-    kernel_printf("fs_read: count %d\n", count);
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     enable_interrupts();
 #endif  // ! FS_DEBUG
     /* modify file pointer */
@@ -519,7 +484,7 @@ fs_read_err:
 }
 
 /* Find a free data cluster */
-u32 fs_next_free(u32 start, u32 *next_free) {
+u32 fs_next_free(u32 start, u32* next_free) {
     u32 clus;
     u32 ClusEntryVal;
 
@@ -541,7 +506,7 @@ fs_next_free_err:
 }
 
 /* Alloc a new free data cluster */
-u32 fs_alloc(u32 *new_alloc) {
+u32 fs_alloc(u32* new_alloc) {
     u32 clus;
     u32 next_free;
 
@@ -582,7 +547,7 @@ fs_alloc_err:
 }
 
 /* Write to file */
-u32 fs_write(FILE *file, const u8 *buf, u32 count) {
+u32 fs_write(FILE* file, const u8* buf, u32 count) {
     /* If write 0 bytes */
     if (count == 0) {
         return 0;
@@ -685,7 +650,7 @@ fs_write_err:
 }
 
 /* lseek */
-void fs_lseek(FILE *file, u32 new_loc) {
+void fs_lseek(FILE* file, u32 new_loc) {
     u32 filesize = file->entry.attr.size;
 
     if (new_loc < filesize)
@@ -695,7 +660,7 @@ void fs_lseek(FILE *file, u32 new_loc) {
 }
 
 /* find an empty directory entry */
-u32 fs_find_empty_entry(u32 *empty_entry, u32 index) {
+u32 fs_find_empty_entry(u32* empty_entry, u32 index) {
     u32 i;
     u32 next_clus;
     u32 sec;
@@ -715,7 +680,8 @@ u32 fs_find_empty_entry(u32 *empty_entry, u32 index) {
                 index = fs_read_512(dir_data_buf, dir_data_buf[index].cur + sec, &dir_data_clock_head, DIR_DATA_BUF_NUM);
                 if (index == 0xffffffff)
                     goto fs_find_empty_entry_err;
-            } else {
+            }
+            else {
                 /* Read next cluster of current directory */
                 if (get_fat_entry_value(dir_data_buf[index].cur - fat_info.BPB.attr.sectors_per_cluster + 1, &next_clus) == 1)
                     goto fs_find_empty_entry_err;
@@ -748,7 +714,7 @@ fs_find_empty_entry_err:
 }
 
 /* create an empty file with attr */
-u32 fs_create_with_attr(u8 *filename, u8 attr) {
+u32 fs_create_with_attr(u8* filename, u8 attr) {
     u32 i;
     u32 l1 = 0;
     u32 l2 = 0;
@@ -833,38 +799,35 @@ fs_creat_err:
     return 1;
 }
 
-u32 fs_create(u8 *filename) {
+u32 fs_create(u8* filename) {
     return fs_create_with_attr(filename, 0x20);
 }
 
-<<<<<<< HEAD
-void get_filetime(u8 *entry, u8 *buf) {
+void get_filetime(u8* entry, u8* buf) {
     u32 i;
     for (i = 22; i < 24; i++) {
-        buf[i-22] = entry[i];
+        buf[i - 22] = entry[i];
     }
     buf[i - 22] = 0;
 }
 
-void get_filedate(u8 *entry, u8 *buf) {
+void get_filedate(u8* entry, u8* buf) {
     u32 i;
     for (i = 24; i < 26; i++) {
-        buf[i-24] = entry[i];
+        buf[i - 24] = entry[i];
     }
     buf[i - 24] = 0;
 }
 
-void get_filesize(u8 *entry, u8 *buf) {
+void get_filesize(u8* entry, u8* buf) {
     u32 i;
     for (i = 28; i < 32; i++) {
-        buf[i-28] = entry[i];
+        buf[i - 28] = entry[i];
     }
     buf[i - 28] = 0;
 }
 
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-void get_filename(u8 *entry, u8 *buf) {
+void get_filename(u8* entry, u8* buf) {
     u32 i;
     u32 l1 = 0, l2 = 8;
 
@@ -876,7 +839,8 @@ void get_filename(u8 *entry, u8 *buf) {
             buf[2] = 0;
         else
             buf[1] = 0;
-    } else {
+    }
+    else {
         for (i = 0; i < 8; i++)
             if (buf[i] == 0x20) {
                 buf[i] = '.';
@@ -906,63 +870,59 @@ void get_filename(u8 *entry, u8 *buf) {
             buf[i - 1] = 0;
     }
 }
-<<<<<<< HEAD
 
-int fs_dotdot(char *path,int i)
-{
-    while(--i>0&&path[i]!='/')
-        path[i]='\0';
-    path[i]='\0';
-    if(i==0)
-        path[i++]='/';
+int fs_dotdot(char* path, int i) {
+    while (--i > 0 && path[i] != '/')
+        path[i] = '\0';
+    path[i] = '\0';
+    if (i == 0)
+        path[i++] = '/';
     return i;
 }
-int fs_fullpath(char *src,char *dst,int sz){
-    int i,j;
-    for(i=0;i<sz;i++)
-        dst[i]='\0';
-    if(src[0]=='/')
+int fs_fullpath(char* src, char* dst, int sz) {
+    int i, j;
+    for (i = 0;i < sz;i++)
+        dst[i] = '\0';
+    if (src[0] == '/')
     {
-        for(i=0;i<sz&&src[i]!='\0';i++)
-            dst[i]=src[i];
+        for (i = 0;i < sz && src[i] != '\0';i++)
+            dst[i] = src[i];
         return 0;
     }
-    for(i=0;i<sz&&relative_path[i]!='\0';i++)
-        dst[i]=relative_path[i];
-    if(src[0]==' '||src[0]=='\0')
+    for (i = 0;i < sz && relative_path[i] != '\0';i++)
+        dst[i] = relative_path[i];
+    if (src[0] == ' ' || src[0] == '\0')
         return 0;
-    char *tmp=src;
+    char* tmp = src;
 fs_fullpath_again:
-    for(j=0;tmp[j]=='.';j++);
-    if(j>0&&(tmp[j]=='\0'||tmp[j]=='/'))
+    for (j = 0;tmp[j] == '.';j++);
+    if (j > 0 && (tmp[j] == '\0' || tmp[j] == '/'))
     {
-        switch(j)
+        switch (j)
         {
-            case 1:// .
-                break;
-            case 2:// ..
-                i=fs_dotdot(dst,i);
-                break;
-            default: // ...(.)
-                dst[0]='/';
-                i=1;
-                break;
+        case 1:// .
+            break;
+        case 2:// ..
+            i = fs_dotdot(dst, i);
+            break;
+        default: // ...(.)
+            dst[0] = '/';
+            i = 1;
+            break;
         }
     }
     else
     {
-        if(i!=1)dst[i++]='/';
-        for(j=0;i<sz&&tmp[j]!='\0'&&tmp[j]!='/';i++,j++)
-            dst[i]=tmp[j];
-        if(j==0)dst[--i]='\0';
+        if (i != 1)dst[i++] = '/';
+        for (j = 0;i < sz && tmp[j] != '\0' && tmp[j] != '/';i++, j++)
+            dst[i] = tmp[j];
+        if (j == 0)dst[--i] = '\0';
     }
-    if(tmp[j]=='/')
+    if (tmp[j] == '/')
     {
-        tmp=tmp+j+1;
+        tmp = tmp + j + 1;
         goto fs_fullpath_again;
     }
 fs_fullpath_exit:
-    return i==sz;
+    return i == sz;
 }
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab

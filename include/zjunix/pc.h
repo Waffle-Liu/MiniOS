@@ -13,48 +13,18 @@
 #define  S_UNINIT    0
 #define  S_READY    1
 #define  S_RUNNING  2
-<<<<<<< HEAD
-#define  S_SLEEPING  3
-=======
 //#define  S_WAITING  3
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 #define  S_TERMINAL 4
 
 //进程时间片信息
 #define  CNT_LV0    0xffffffff
-<<<<<<< HEAD
-#define  CNT_BASE   200
-=======
 #define  CNT_BASE   500
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
 //调度链表信息
 #define  SCHED_LV0   0  //forward process
 #define  SCHED_LV1   1
 #define  SCHED_LV2   2
 #define  SCHED_LV3   3
-<<<<<<< HEAD
-#define  SCHED_LV4   4
-#define  SCHED_LV5   5
-#define  SCHED_LV6   6
-#define  SCHED_LV7   7
-#define  SCHED_LV8   8
-#define  SCHED_LV_RANGE  8   
-#define  SCHED_LV_MAX  SCHED_LV_RANGE
-#define  SCHED_LV_MIN  1
-
-//链表结构
-struct pclist
-{
-	struct task_struct* pred;
-	struct task_struct* succ;
-	struct task_struct* what;
-};
-
-//寄存器信息结构，主要用于进程调度时的进程切换
-struct regs_context 
-{
-=======
 #define  SCHED_LV_RANGE  3   
 #define  SCHED_LV_MAX  SCHED_LV_RANGE
 #define  SCHED_LV_MIN  1
@@ -62,7 +32,6 @@ struct regs_context
 
 //寄存器信息结构，主要用于进程调度时的进程切换
 struct regs_context {
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
     unsigned int epc;
     unsigned int at;
     unsigned int v0, v1;
@@ -84,30 +53,13 @@ struct task_struct {
 
     unsigned int time_cnt;  //进程所拥有的时间片
     unsigned int sched_lv;  //用于多级反馈队列调度算法,当前为第几级队列   
-<<<<<<< HEAD
-	unsigned int tasktype; //进程类型
-
-	unsigned int start_time;  //记录进程开始的时间
-	unsigned int levelup; //记录进程每一次大调整的时候提升的优先度
-	unsigned int runtime; //记录该进程跑多少个进程单位时间
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
     struct regs_context context;    //进程寄存器信息
-    struct mm_struct *mm;           //进程地址空间结构指针
-    FILE *task_files;               //进程打开文件指针
+    struct mm_struct* mm;           //进程地址空间结构指针
+    FILE* task_files;               //进程打开文件指针
 
-<<<<<<< HEAD
-	struct pclist node;  //用于进程链表
-
-    struct pclist wakeuplist;         //用于存储进程结束后具体会唤醒哪些进程
-    struct pclist waitlist;          //用于存储进程需要等待哪一些进程完成
-
-    int messageid;
-=======
     struct list_head sched;         //用于进程调度
     struct list_head node;          //用于进程链表
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 };
 
 union task_union {
@@ -118,60 +70,41 @@ union task_union {
 
 typedef struct regs_context context;
 
-<<<<<<< HEAD
-extern struct task_struct *tasks[PID_NUM+1]; 
-extern struct pclist schedhead;
-extern struct pclist schedtail;
-extern struct pclist sched_backtail[SCHED_LV_RANGE + 1];
-extern struct pclist sched_backhead[SCHED_LV_RANGE + 1];
-=======
 extern struct list_head tasks;
 extern struct list_head sched;
 extern struct list_head sched_back[SCHED_LV_RANGE + 1];
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-extern struct task_struct *current_task;
+extern struct task_struct* current_task;
 
 void task_files_delete(struct task_struct* task);
-void remove_sched(struct task_struct *task);
-void remove_task(struct task_struct *task);
-void remove_exited(struct task_struct *task);
+void remove_sched(struct task_struct* task);
+void remove_task(struct task_struct* task);
+void remove_exited(struct task_struct* task);
 
 
-void add_sched(struct task_struct *task);
-void add_sched_back(struct task_struct *task, int index);
-void add_task(struct task_struct *task);
-void add_exited(struct task_struct *task);
+void add_sched(struct task_struct* task);
+void add_sched_back(struct task_struct* task, int index);
+void add_task(struct task_struct* task);
+void add_exited(struct task_struct* task);
 
 struct task_struct* find_in_tasks(pid_t pid);
 struct task_struct* find_in_sched(pid_t pid);
 
-int task_create(char *task_name, void(*entry)(unsigned int argc, void *args), 
-                unsigned int argc, void *args, pid_t *retpid, int is_user);
-int runprog(unsigned int argc, void *args);
+int task_create(char* task_name, void(*entry)(unsigned int argc, void* args),
+    unsigned int argc, void* args, pid_t* retpid, int is_user);
+int runprog(unsigned int argc, void* args);
 static void copy_context(context* src, context* dest);
-int exec_from_kernel(unsigned int argc, void *args, int is_wait, int is_user);
+int exec_from_kernel(unsigned int argc, void* args, int is_wait, int is_user);
 
 void init_pc();
 void init_pc_list();
 void pc_schedule(unsigned int status, unsigned int cause, context* pt_context);
-<<<<<<< HEAD
-
 int pc_kill(pid_t pid);
-int pc_sleep(pid_t pid);
-int pc_wake(pid_t pid);
-=======
-int pc_kill(pid_t pid);
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 
 void waitpid(pid_t pid);
-void add_wait(struct task_struct *task);
+void add_wait(struct task_struct* task);
 void wakeup_parent();
 void print_wait();
 
-<<<<<<< HEAD
-=======
-
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 /**************tlb****************/
 void activate_mm(struct task_struct* task);
 int runuserprog(char* progname);
@@ -186,15 +119,8 @@ extern void switch_wa(struct regs_context* des, struct regs_context* src);
 void clear_exited();
 
 void print_exited();
-void print_sched();     
+void print_sched();
 void print_task();
 void print_struct_task(struct task_struct* task);
 
-<<<<<<< HEAD
-int pc_send(char* );
-int pc_receive(pid_t );
-int pc_shift(pid_t);
-
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 #endif  // !_ZJUNIX_PC_H

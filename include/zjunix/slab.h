@@ -14,7 +14,7 @@
  * @nr_objs : keeps the numbers of memory segments that has been allocated
  */
 struct slab_head {
-    void *end_ptr;
+    void* end_ptr;
     unsigned int nr_objs;
     char was_full;
 };
@@ -31,7 +31,7 @@ struct kmem_cache_node {
 
 // Current-page-used
 struct kmem_cache_cpu {
-    struct page *page;
+    struct page* page;
 };
 
 struct kmem_cache {
@@ -41,14 +41,9 @@ struct kmem_cache {
     struct kmem_cache_cpu cpu;      // Current page
 };
 
-<<<<<<< HEAD
-extern void slab_info();
-=======
-
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
 extern void init_slab();
-extern void *kmalloc(unsigned int size);
-extern void *phy_kmalloc(unsigned int size);
-extern void kfree(void *obj);
+extern void* kmalloc(unsigned int size);
+extern void* phy_kmalloc(unsigned int size);
+extern void kfree(void* obj);
 
 #endif

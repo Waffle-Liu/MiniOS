@@ -3,34 +3,7 @@
 
 extern struct fs_info fat_info;
 
-<<<<<<< HEAD
-u32 LRU[256];
-u32 LRU_index;
-
-u32 fs_victim_4k_lru(BUF_4K *buf, u32 *clock_head, u32 size)
-{
-
-}
-
-u32 fs_write_4k_lru(BUF_4K *f)
-{
-
-}
-
-u32 fs_read_4k_lru(BUF_4K *f, u32 FirstSectorOfCluster, u32 *clock_head, u32 size)
-{
-
-}
-
-u32 fs_clr_4k_lru(BUF_4K *buf, u32 *clock_head, u32 size, u32 cur)
-{
-    
-}
-
-/* find victim in 4k byte buffer */
-=======
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-u32 fs_victim_4k(BUF_4K *buf, u32 *clock_head, u32 size) {
+u32 fs_victim_4k(BUF_4K* buf, u32* clock_head, u32 size) {
     u32 i;
     u32 index = *clock_head;
 
@@ -76,7 +49,7 @@ fs_victim_4k_ok:
 }
 
 /* Write current 4k buffer */
-u32 fs_write_4k(BUF_4K *f) {
+u32 fs_write_4k(BUF_4K* f) {
     if ((f->cur != 0xffffffff) && (((f->state) & 0x02) != 0)) {
         if (write_block(f->buf, f->cur, fat_info.BPB.attr.sectors_per_cluster) == 1)
             goto fs_write_4k_err;
@@ -91,7 +64,7 @@ fs_write_4k_err:
 }
 
 /* Read 4k cluster */
-u32 fs_read_4k(BUF_4K *f, u32 FirstSectorOfCluster, u32 *clock_head, u32 size) {
+u32 fs_read_4k(BUF_4K* f, u32 FirstSectorOfCluster, u32* clock_head, u32 size) {
     u32 index;
     u32 FirstSecWithOfs = FirstSectorOfCluster + fat_info.base_addr;
     /* try to find in buffer */
@@ -110,7 +83,8 @@ u32 fs_read_4k(BUF_4K *f, u32 FirstSectorOfCluster, u32 *clock_head, u32 size) {
 
         f[index].cur = FirstSecWithOfs;
         f[index].state = 1;
-    } else
+    }
+    else
         f[index].state |= 0x01;
 
     return index;
@@ -119,7 +93,7 @@ fs_read_4k_err:
 }
 
 /* clear a buffer block, used to avoid reading a new erased block from sd */
-u32 fs_clr_4k(BUF_4K *buf, u32 *clock_head, u32 size, u32 cur) {
+u32 fs_clr_4k(BUF_4K* buf, u32* clock_head, u32 size, u32 cur) {
     u32 index;
     u32 i;
 
@@ -140,12 +114,8 @@ fs_clr_4k_err:
     return 1;
 }
 
-<<<<<<< HEAD
-/* find victim in 512-byte buffer */
-=======
 /* find victim in 512-byte/4k buffer */
->>>>>>> f4e0b061d017001174f96bd5938c7dee3d0569ab
-u32 fs_victim_512(BUF_512 *buf, u32 *clock_head, u32 size) {
+u32 fs_victim_512(BUF_512* buf, u32* clock_head, u32 size) {
     u32 i;
     u32 index = *clock_head;
 
@@ -191,7 +161,7 @@ fs_victim_512_ok:
 }
 
 /* Write current 512 buffer */
-u32 fs_write_512(BUF_512 *f) {
+u32 fs_write_512(BUF_512* f) {
     if ((f->cur != 0xffffffff) && (((f->state) & 0x02) != 0)) {
         if (write_block(f->buf, f->cur, 1) == 1)
             goto fs_write_512_err;
@@ -206,7 +176,7 @@ fs_write_512_err:
 }
 
 /* Read 512 sector */
-u32 fs_read_512(BUF_512 *f, u32 FirstSectorOfCluster, u32 *clock_head, u32 size) {
+u32 fs_read_512(BUF_512* f, u32 FirstSectorOfCluster, u32* clock_head, u32 size) {
     u32 index;
     u32 FirstSecWithOfs = FirstSectorOfCluster + fat_info.base_addr;
     /* try to find in buffer */
@@ -225,7 +195,8 @@ u32 fs_read_512(BUF_512 *f, u32 FirstSectorOfCluster, u32 *clock_head, u32 size)
 
         f[index].cur = FirstSecWithOfs;
         f[index].state = 1;
-    } else
+    }
+    else
         f[index].state |= 0x01;
 
     return index;
@@ -233,7 +204,7 @@ fs_read_512_err:
     return 0xffffffff;
 }
 
-u32 fs_clr_512(BUF_512 *buf, u32 *clock_head, u32 size, u32 cur) {
+u32 fs_clr_512(BUF_512* buf, u32* clock_head, u32 size, u32 cur) {
     u32 index;
     u32 i;
 
